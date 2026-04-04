@@ -1,0 +1,8 @@
+name = "local-bridge"
+main = "src/worker.ts"
+compatibility_date = "2024-01-01"
+account_id = "049ff5e84ecf636b53b162cbb580aae6"
+
+[[kv_namespaces]]
+binding = "BRIDGE_KV"
+id = "b5d1dcfa6c79438682fc2516bae5cd5d"
