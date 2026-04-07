@@ -1,56 +1,57 @@
-# Local Bridge 🛰️
+# Local Bridge 🛸
 
-A private bridge to connect your local LLM servers to the Cocapn Fleet. It lets agents discover and use your self-hosted models without routing your data through third-party services.
+Register your local Ollama, vLLM, or LM Studio server with the Cocapn Fleet. Your models appear in compatible clients—no API keys, accounts, or data routing through third parties.
+
+A public reference bridge is live at: **https://the-fleet.casey-digennaro.workers.dev/bridge**
 
 ---
 
-## Try It
+## Why This Exists
 
-A public reference bridge is available: https://the-fleet.casey-digennaro.workers.dev/bridge
+You can run great models locally, but many tools require cloud API endpoints. This bridge connects your local inference server directly to the open agent ecosystem without proxying your prompts through an intermediary service.
 
-You can deploy your own private copy in a few minutes.
+---
 
 ## Quick Start
 
-1.  **Fork** this repository. You own and control your copy.
+1.  **Fork** this repository first.
 2.  Deploy to Cloudflare Workers: `npx wrangler deploy`
-3.  Open your worker's URL, paste your local server's public endpoint into the form.
-4.  Your model will appear in fleet provider lists within moments.
+3.  Open your worker's URL and paste your local server's public endpoint into the form.
+4.  Your model appears in fleet provider lists.
 
 ---
 
 ## How It Works
 
--   **Direct Connection**: The bridge shares only your server's public endpoint. All inference traffic flows directly from the agent to your server; prompts and responses never pass through the bridge.
--   **Universal Compatibility**: Works with any OpenAI-compatible server (Ollama, vLLM, LM Studio, llama.cpp, etc.).
--   **Zero Tracking**: No accounts, API keys, or mandatory telemetry. The code is the entire system.
--   **Simple & Auditable**: The worker is ~300 lines of plain JavaScript with zero runtime dependencies.
+This is a stateless Cloudflare Worker. It stores transient provider metadata in KV, clearing entries after 15 minutes of inactivity. It shares only your server's public endpoint—all inference traffic flows directly from the agent to your server.
 
-## Details
-
--   **Tunnel Agnostic**: Use `cloudflared`, ngrok, Tailscale, or a direct public IP.
--   **Respectful Health Checks**: Passive checks only occur when your provider is listed in the fleet. No background polling spam.
--   **Native Discovery**: Registered models appear in Claude Code, the Cocapn UI, and other fleet clients.
--   **Your Rules**: You maintain all access control, rate limits, and model configuration on your server. The bridge does not enforce policies.
--   **Deploy Flexibly**: Run a private bridge for your team or register with the public fleet.
-
-### One Limitation
-
-Your local inference server must be publicly accessible (via a tunnel or IP) for agents on the fleet to reach it. The bridge cannot relay traffic for fully air-gapped machines.
-
-## Architecture
-
-This is a stateless Cloudflare Worker. It stores transient provider metadata (endpoint, model name) in a KV namespace, automatically clearing entries after 15 minutes of inactivity. There is no database, logging, or persistent storage.
-
-## Contributing
-
-This project follows the Cocapn Fleet's fork-first philosophy. Fork it, modify it for your needs, and contribute fixes or improvements upstream via PR when they are stable. Suggestions for better health checks or compatibility are welcome.
+*   **Direct Connection**: Prompts and responses never pass through the bridge.
+*   **OpenAI-Compatible**: Works with any local server that provides an OpenAI-compatible API.
+*   **Tunnel Agnostic**: Use `cloudflared`, ngrok, Tailscale, or a direct public IP.
+*   **Zero Tracking**: No accounts, API keys, or mandatory telemetry.
+*   **Auditable**: ~300 lines of plain JavaScript, zero runtime dependencies.
+*   **Your Control**: You manage access, rate limits, and model configuration.
 
 ---
 
-MIT License · Superinstance & Lucineer (DiGennaro et al.)
+## What Makes This Different
 
-<div align="center">
-  <a href="https://the-fleet.casey-digennaro.workers.dev">The Fleet</a> · 
-  <a href="https://cocapn.ai">Cocapn</a>
-</div>
+1.  You run your own bridge. No vendor can revoke your access.
+2.  It never sees your prompts or model responses. Traffic is direct.
+3.  No signup, email, or terms of service required.
+
+---
+
+## One Limitation
+
+The bridge only registers your endpoint; it does not relay traffic. Your local inference server must be publicly accessible via a tunnel or public IP. The bridge also provides no authentication layer—you must secure your server separately.
+
+---
+
+## Contributing
+
+This project follows the Cocapn Fleet fork-first philosophy. Fork it, modify it for your needs, and contribute stable fixes or improvements upstream via PR.
+
+MIT License
+
+<div style="text-align:center;padding:16px;color:#64748b;font-size:.8rem"><a href="https://the-fleet.casey-digennaro.workers.dev" style="color:#64748b">The Fleet</a> &middot; <a href="https://cocapn.ai" style="color:#64748b">Cocapn</a></div>
