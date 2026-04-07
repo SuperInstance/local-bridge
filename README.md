@@ -1,71 +1,63 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/Lucineer/capitaine/master/docs/capitaine-logo.jpg" alt="Capitaine" width="120">
-</p>
+# Local Bridge
+You run models locally, but they're invisible to the fleet. This bridge makes them visible.
 
-<h1 align="center">local-bridge</h1>
-
-<p align="center">Bridge between local development and deployed fleet vessels.</p>
-
-<p align="center">
-  <a href="https://github.com/Lucineer/local-bridge/issues">Issues</a> ·
-  <a href="#the-fleet">The Fleet</a>
-</p>
+It connects your local LLM servers (Ollama, vLLM, LM Studio) to the Cocapn Fleet, letting you use your own models alongside any other provider.
 
 ---
 
-**Fleet service** · Powered by [Capitaine](https://github.com/Lucineer/capitaine) · [Cocapn](https://github.com/Lucineer/cocapn)
+## Why
+Agent fleets are built for closed, hosted APIs. The model on your machine is an afterthought.
 
-A cocapn fleet service running on Cloudflare Workers.
+This bridge does one thing: it lets the fleet discover and use your local models. No proxies, no wrapper fees.
+
+---
+
+## Try It
+You can test the public bridge endpoint now. No signup.
+**Live URL**: `https://the-fleet.casey-digennaro.workers.dev/bridge`
+
+If you have Ollama running, you can register it in about a minute.
+
+---
 
 ## Quick Start
+1.  **Fork & clone** this repository.
+2.  **Deploy** to Cloudflare Workers: `npx wrangler deploy`
+3.  **Register** your local endpoint via the deployed worker's web interface.
 
-```bash
-gh repo fork Lucineer/local-bridge --clone
-cd local-bridge
-npx wrangler login
-npx wrangler deploy
-```
+---
 
-## The Fleet
+## How It Works
+This Cloudflare Worker is a registration hub and status tracker. It stores public model metadata and runs passive health checks. Valid endpoints are advertised to the fleet. **All inference traffic flows directly between agents and your local server**; this bridge never sees it.
 
+## Features
+*   **Runtime Support**: Works with OpenAI-compatible local runtimes (Ollama, vLLM, LM Studio).
+*   **Tunnel Agnostic**: Use `cloudflared`, `ngrok`, Tailscale, or a direct public IP.
+*   **Passive Health Checks**: Your server is pinged only to verify liveness.
+*   **Fleet Discovery**: Registered models appear in provider lists for all agents.
+*   **Zero Dependencies**: The entire worker is plain JavaScript.
+*   **No Gatekeeping**: No accounts, API keys, or rate limits from the bridge.
 
-<details>
-<summary><strong>⚓ The Fleet</strong></summary>
+## Limitation
+Your local model must be accessible via a public endpoint. If your network or tunnel is unstable, the model may be marked offline by the fleet.
 
-**Flagship vessels**
+---
 
-- [cocapn.ai](https://github.com/Lucineer/capitaine)
-- [personallog.ai](https://github.com/Lucineer/personallog-ai)
-- [businesslog.ai](https://github.com/Lucineer/businesslog-ai)
-- [studylog.ai](https://github.com/Lucineer/studylog-ai)
-- [makerlog.ai](https://github.com/Lucineer/makerlog-ai)
-- [playerlog.ai](https://github.com/Lucineer/playerlog-ai)
-- [dmlog.ai](https://github.com/Lucineer/dmlog-ai)
-- [reallog.ai](https://github.com/Lucineer/reallog-ai)
-- [deckboss.ai](https://github.com/Lucineer/deckboss-ai)
+## What This Is Not
+*   **A Proxy**: We never see your prompts or inference traffic.
+*   **A Service**: This is infrastructure you own and deploy. Fork-first philosophy.
 
-**Fleet services**
+---
 
-- [Fleet Catalog](https://github.com/Lucineer/capitaine/blob/master/docs/fleet/FLEET.md)
-- [Git Agent (full)](https://github.com/Lucineer/git-agent)
-- [Cocapn Lite (minimal)](https://github.com/Lucineer/cocapn-lite)
-- [Fleet Orchestrator](https://github.com/Lucineer/fleet-orchestrator)
-- [Dead Reckoning Engine](https://github.com/Lucineer/dead-reckoning-engine)
-- [Dream Engine](https://github.com/Lucineer/dream-engine)
-- [Seed UI (5 layers)](https://github.com/Lucineer/seed-ui)
+## Contributing
+Fork the repository, adapt it for your use case, and send improvements upstream. PRs are welcome for better health checks or documentation.
 
-**For power users**
+---
 
-- [Cocapn Lite (tabula rasa)](https://github.com/Lucineer/cocapn-lite)
-- [Cocapn (core platform)](https://github.com/Lucineer/cocapn)
-- [ZeroClaw (framework)](https://github.com/Lucineer/zeroclaw)
+MIT License · Superinstance & Lucineer (DiGennaro et al.)
 
-[View all 106 repos →](https://github.com/orgs/Lucineer/repositories)
-[Fleet manifest →](https://github.com/Lucineer/capitaine/blob/master/docs/fleet/FLEET.md)
-
-</details>
-
-
-## License
-
-MIT · Superinstance & Lucineer (DiGennaro et al.)
+---
+<div align="center">
+  <a href="https://the-fleet.casey-digennaro.workers.dev">The Fleet</a> · 
+  <a href="https://cocapn.ai">Cocapn</a>
+</div>
